@@ -8,6 +8,12 @@ var schema = new Schema({
 	},
 	to: {
 		type: mongoose.SchemaTypes.ObjectId,
+		ref: 'users',
+		required: true,
+	},
+	for: {
+		type: mongoose.SchemaTypes.ObjectId,
+		ref: 'imageCollections',
 		required: true,
 	},
 	message: {

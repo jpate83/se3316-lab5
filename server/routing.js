@@ -253,18 +253,22 @@ module.exports = function(passport) {
 				if (collection.ownerId.toString() == req.user._id.toString()) {
 					return res.json({error: ''});
 				};
-				
-				var existing = collection.findIndex(function(el) {
+
+				var existing = collection.ratings.findIndex(function(el) {
 					return el.ownerId.toString() == req.user._id.toString();
 				});
 				if (existing != -1) {
-					collection[existing].rating = req.body.rating;
+					collection.ratings[existing].rating = req.body.rating;
 				} else {
-					collection.push({
+					collection.ratings.push({
 						ownerId: req.user._id,
 						rating: req.body.rating,
 					});
 				};
+				collection.averageRating = collection.ratings.reduce(function(accum, curr) {
+					return accum + curr.rating;
+				}, 0);
+				collection.averageRating = collection.averageRating/collection.ratings.length;
 				collection.save({validateBeforeSave: true}, function(err, newCollection) {
 					if (err) {
 						res.json({error: ''});
@@ -292,7 +296,7 @@ module.exports = function(passport) {
 	});
 
 	router.get('/user/takedown-notices', ensureAuthenticated, function(req, res) {
-		DMCANotice.find({to: req.user._id}).exec(function(err, noticies) {
+		DMCANotice.find({to: req.user._id}).populate('for').exec(function(err, noticies) {
 			res.json({
 				data: noticies,
 			});
@@ -351,7 +355,7 @@ module.exports = function(passport) {
 	});
 
 	router.get('/admin/takedown-requests', function(req, res) {
-		DMCAReport.find({}).exec(function(err, reports) {
+		DMCAReport.find({}).populate('for').populate('to').exec(function(err, reports) {
 			res.json({
 				data: reports,
 			});
@@ -370,6 +374,7 @@ module.exports = function(passport) {
 		var newNotice = new DMCANotice({
 			created: new Date(),
 			to: req.body.to,
+			for: req.body.for,
 			message: sanitizeString(req.body.message),
 		});
 		newNotice.save({validateBeforeSave: true}, function(err, saved) {
