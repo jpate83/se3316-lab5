@@ -58,7 +58,6 @@ module.exports = function(passport) {
 		req.body.name = req.body["name"];
 		passport.authenticate('local-signup', function(info, user) {
 			if (req.session.error) {
-				console.log(req.session.error)
 				res.json({
 					error: req.session.error,
 				});
@@ -70,7 +69,6 @@ module.exports = function(passport) {
 							error: 'Error logging you in',
 						});
 					};
-					console.log(user)
 					res.json({
 						data: user
 					});

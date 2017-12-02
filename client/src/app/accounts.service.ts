@@ -67,7 +67,7 @@ export class AccountsService {
             name,
             password,
         }).subscribe(data => {
-            var user = data['user'];
+            var user = data['data'];
             if (user) {
                 localStorage.setItem('user', user);
             }
