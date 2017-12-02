@@ -8,6 +8,7 @@ var schema = new Schema({
 	},
 	ownerId: {
 		type: mongoose.SchemaTypes.ObjectId,
+		ref: 'users',
 		required: true,
 	},
 	name: {

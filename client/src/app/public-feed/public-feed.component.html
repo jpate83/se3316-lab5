@@ -1,3 +1,9 @@
-<p>
-  public-feed works!
-</p>
+<h1>Public collections</h1>
+<ul *ngIf="collections.length">
+    <li *ngFor="let collection of collections">
+        <a routerLink="/collection/{{collection._id}}">{{collection.name}}</a>
+        <p>By: {{collection.ownerId.name}}</p>
+        <p>Avg. rating: {{collection.averageRating}}</p>
+    </li>
+</ul>
+<p *ngIf="!collections.length">No items available publicly.</p>

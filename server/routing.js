@@ -177,7 +177,7 @@ module.exports = function(passport) {
 		ImageCollection.find({
 			isPublic: true,
 			isDeleted: { $ne: true },
-		}).exec(function(err, results) {
+		}).populate('ownerId').exec(function(err, results) {
 			res.json({
 				data: results,
 			});
