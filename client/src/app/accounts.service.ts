@@ -18,10 +18,10 @@ export class AccountsService {
             if (user) {
                 localStorage.setItem('user', user);
             };
-            callback(user);
+            callback(user, data["error"]);
         }, err => {
             console.log(err);
-            callback(false);
+            callback(false, err);
         });
     }
     
@@ -71,10 +71,10 @@ export class AccountsService {
             if (user) {
                 localStorage.setItem('user', user);
             }
-            callback(user);
+            callback(user, data["error"]);
         }, err => {
             console.log(err);
-            callback(false);
+            callback(false, err);
         });
     }
 }

@@ -32,11 +32,11 @@ export class RegisterComponent implements OnInit {
     }
     
     let self = this;
-    self.accounts.register(values.email, values.name, values.password, (isSuccess) => {
+    self.accounts.register(values.email, values.name, values.password, (isSuccess, err) => {
       if (isSuccess) {
         self.router.navigate(['/dash']);
       } else {
-        alert('Error logging in with given credentials.');
+        alert(err || 'Error logging in with given credentials.');
       }
     });
   }

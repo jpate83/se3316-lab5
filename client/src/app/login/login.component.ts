@@ -30,11 +30,11 @@ export class LoginComponent implements OnInit {
     }
     
     let self = this;
-    self.accounts.login(values.email, values.password, (isSuccess) => {
+    self.accounts.login(values.email, values.password, (isSuccess, err) => {
       if (isSuccess) {
         self.router.navigate(['/dash']);
       } else {
-        alert('Error logging in with given credentials.');
+        alert(err || 'Error logging in with given credentials.');
       }
     });
   }
