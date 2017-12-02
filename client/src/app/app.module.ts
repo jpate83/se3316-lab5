@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 
 import { AppComponent } from './app.component';
@@ -22,6 +23,7 @@ import { PoliciesComponent } from './policies/policies.component';
 import { CollectionViewComponent } from './collection-view/collection-view.component';
 import { AdminDashComponent } from './admin-dash/admin-dash.component';
 import { AdminLogsComponent } from './admin-logs/admin-logs.component';
+import { LogoutComponent } from './logout/logout.component';
 
 @NgModule({
   declarations: [
@@ -36,12 +38,14 @@ import { AdminLogsComponent } from './admin-logs/admin-logs.component';
     PoliciesComponent,
     CollectionViewComponent,
     AdminDashComponent,
-    AdminLogsComponent
+    AdminLogsComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [
     AccountsService,

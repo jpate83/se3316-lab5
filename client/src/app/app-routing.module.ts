@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { StartpageComponent } from './startpage/startpage.component';
 import { PoliciesComponent } from './policies/policies.component';
 import { LoginComponent } from './login/login.component';
+import { LogoutComponent } from './logout/logout.component';
 import { RegisterComponent } from './register/register.component';
 import { DashComponent } from './dash/dash.component';
 import { PublicFeedComponent } from './public-feed/public-feed.component';
@@ -14,10 +15,12 @@ import { AdminDashComponent } from './admin-dash/admin-dash.component';
 import { AdminLogsComponent } from './admin-logs/admin-logs.component';
 
 
+
 const routes = [
   { path: 'startpage', component: StartpageComponent },
   { path: 'policies', component: PoliciesComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'logout', component: LogoutComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'dash', component: DashComponent },
   { path: 'public-feed', component: PublicFeedComponent },

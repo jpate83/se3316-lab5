@@ -1,3 +1,24 @@
-<p>
-  register works!
-</p>
+<p>Have an account? <a routerLink="/login">Log in</a></p>
+<form #f="ngForm" (ngSubmit)="onSubmit(f.value)" accept-charset="utf-8">
+    <fieldset>
+        <legend>Register</legend>
+        <label for="email">Your email</label>
+        <input
+            type="email"
+            name="email"
+            id="email"
+            required
+            ngModel />
+        <label for="email">Your name</label>
+        <input
+            type="text"
+            name="name"
+            id="name"
+            required
+            ngModel />
+        <label for="password">Your password</label>
+        <input type="password" name="password" id="password" required ngModel />
+        
+        <input type="submit" value="Register"/>
+    </fieldset>
+</form>

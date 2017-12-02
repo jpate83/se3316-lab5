@@ -1,3 +1,17 @@
-<p>
-  login works!
-</p>
+<p>No account? <a routerLink="/register">Register</a></p>
+<form #f="ngForm" (ngSubmit)="onSubmit(f.value)" accept-charset="utf-8">
+    <fieldset>
+        <legend>Log in</legend>
+        <label for="email">Your email</label>
+        <input
+            type="email"
+            name="email"
+            id="email"
+            required
+            ngModel />
+        <label for="password">Your password</label>
+        <input type="password" name="password" id="password" required ngModel />
+        
+        <input type="submit" value="Log in"/>
+    </fieldset>
+</form>
