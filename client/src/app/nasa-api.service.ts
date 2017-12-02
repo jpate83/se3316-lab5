@@ -14,9 +14,9 @@ export class NasaApiService {
             callback(this.queryResults[q][page]);
         } else {
             let params = new HttpParams();
-            params.set('q', q);
-            params.set('media_type', 'image');
-            params.set('page', page);
+            params = params.set('q', q);
+            params = params.set('media_type', 'image');
+            params = params.set('page', page);
             this.http.get(base + '/search', { params }).subscribe(data => {
                 let resp = data["collection"];
                 if (resp)

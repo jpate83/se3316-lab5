@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 const base = 'https://lab5-sumkcid.c9users.io:8081/api';
 
@@ -14,7 +14,7 @@ export class AdminService {
         }).subscribe(data => {
             var verified = data['verified'];
             if (verified) {
-                localStorage.setItem('adminVerified', 'true');
+                localStorage.setItem('adminVerified', password);
             }
             callback(verified);
         }, err => {
@@ -24,7 +24,9 @@ export class AdminService {
     }
     
     updatePolicies(newPolicies, callback) {
-        this.http.post(base + '/admin/updatePolicies', newPolicies)
+        let body = { ...newPolicies };
+        body.password = localStorage.getItem('adminVerified');
+        this.http.post(base + '/admin/updatePolicies', body)
         .subscribe(data => {
             callback(data['data']);
         }, err => {
@@ -38,6 +40,7 @@ export class AdminService {
             to: toUserId,
             for: forCollectionId,
             message,
+            password: localStorage.getItem('adminVerified'),
         }).subscribe(data => {
             callback(data['data']);
         }, err => {
@@ -49,6 +52,7 @@ export class AdminService {
     disableCollection(collectionId, message, callback) {
         this.http.post(base + '/admin/disable-collection', {
             collectionId,
+            password: localStorage.getItem('adminVerified'),
         }).subscribe(data => {
             callback(data['data']);
         }, err => {
@@ -60,6 +64,7 @@ export class AdminService {
     undoDisableCollection(collectionId, message, callback) {
         this.http.post(base + '/admin/undo-disable-collection', {
             collectionId,
+            password: localStorage.getItem('adminVerified'),
         }).subscribe(data => {
             callback(data['data']);
         }, err => {
@@ -70,7 +75,9 @@ export class AdminService {
     
     
     getTakedownRequests(callback) {
-        this.http.get(base + '/admin/takedown-requests').subscribe(data => {
+        let params = new HttpParams().set('password', localStorage.getItem('adminVerified'));
+        
+        this.http.get(base + '/admin/takedown-requests', { params }).subscribe(data => {
             callback(data['data']);
         }, err => {
             console.log(err);
@@ -79,7 +86,9 @@ export class AdminService {
     }
     
     getTakedownNotices(callback) {
-        this.http.get(base + '/admin/takedown-notices').subscribe(data => {
+        let params = new HttpParams().set('password', localStorage.getItem('adminVerified'));
+        
+        this.http.get(base + '/admin/takedown-notices', { params }).subscribe(data => {
             callback(data['data']);
         }, err => {
             console.log(err);

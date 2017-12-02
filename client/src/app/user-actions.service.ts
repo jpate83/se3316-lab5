@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { AccountsService } from './accounts.service';
 
 const base = 'https://lab5-sumkcid.c9users.io:8081/api';
 
 @Injectable()
 export class UserActionsService {
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private accounts: AccountsService) { }
     
     createCollection(name, description, isPublic, callback) {
         this.http.post(base + '/user/create-collection', {
             name,
             description,
             isPublic,
+            user: this.accounts.currentUser(),
         }).subscribe(data => {
             callback(data['data']);
         }, err => {
@@ -25,6 +27,7 @@ export class UserActionsService {
         this.http.post(base + '/user/create-collection', {
             updatedCollection,
             updatedCollectionId: collectionId,
+            user: this.accounts.currentUser(),
         }).subscribe(data => {
             callback(data['data']);
         }, err => {
@@ -36,6 +39,7 @@ export class UserActionsService {
     deleteCollection(collectionId, callback) {
         this.http.post(base + '/user/delete-collection', {
             updatedCollectionId: collectionId,
+            user: this.accounts.currentUser(),
         }).subscribe(data => {
             callback(data['success']);
         }, err => {
@@ -48,6 +52,7 @@ export class UserActionsService {
         this.http.post(base + '/user/rate-collection', {
             rating,
             collectionId,
+            user: this.accounts.currentUser(),
         }).subscribe(data => {
             callback(data['data']);
         }, err => {
@@ -60,6 +65,7 @@ export class UserActionsService {
         this.http.post(base + '/user/report-collection', {
             reportedEntityId: collectionId,
             message,
+            user: this.accounts.currentUser(),
         }).subscribe(data => {
             callback(data['data']);
         }, err => {
@@ -71,6 +77,7 @@ export class UserActionsService {
     readTakedownNotice(noticeId, callback) {
         this.http.post(base + '/user/read-takedown-notice', {
             noticeId,
+            user: this.accounts.currentUser(),
         }).subscribe(data => {
             callback(data['data']);
         }, err => {
@@ -83,6 +90,7 @@ export class UserActionsService {
         this.http.post(base + '/user/dispute-takedown-notice', {
             noticeId,
             message,
+            user: this.accounts.currentUser(),
         }).subscribe(data => {
             callback(data['data']);
         }, err => {

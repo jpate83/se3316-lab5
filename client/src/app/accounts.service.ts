@@ -16,7 +16,7 @@ export class AccountsService {
         }).subscribe(data => {
             var user = data['data'];
             if (user) {
-                localStorage.setItem('user', user);
+                localStorage.setItem('user', JSON.stringify(user));
             };
             callback(user, data["error"]);
         }, err => {
@@ -25,14 +25,15 @@ export class AccountsService {
         });
     }
     
-    isLoggedIn(callback) {
-        this.http.get(base + '/isAuthenticated', {}).subscribe(data => {
+    isLoggedIn(/*callback*/) {
+        return !!localStorage.getItem('user');
+        /*this.http.get(base + '/isAuthenticated', {}).subscribe(data => {
             var isAuthenticated = data['isAuthenticated'];
             callback(isAuthenticated);
         }, err => {
             console.log(err);
             callback(false);
-        });
+        });*/
     }
     
     logout(callback) {
@@ -69,12 +70,16 @@ export class AccountsService {
         }).subscribe(data => {
             var user = data['data'];
             if (user) {
-                localStorage.setItem('user', user);
+                localStorage.setItem('user', JSON.stringify(user));
             }
             callback(user, data["error"]);
         }, err => {
             console.log(err);
             callback(false, err);
         });
+    }
+    
+    currentUser() {
+        return JSON.parse(localStorage.getItem('user'));
     }
 }

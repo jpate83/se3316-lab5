@@ -24,6 +24,7 @@ import { CollectionViewComponent } from './collection-view/collection-view.compo
 import { AdminDashComponent } from './admin-dash/admin-dash.component';
 import { AdminLogsComponent } from './admin-logs/admin-logs.component';
 import { LogoutComponent } from './logout/logout.component';
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { LogoutComponent } from './logout/logout.component';
     CollectionViewComponent,
     AdminDashComponent,
     AdminLogsComponent,
-    LogoutComponent
+    LogoutComponent,
+    VerifyEmailComponent
   ],
   imports: [
     BrowserModule,

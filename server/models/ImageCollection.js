@@ -17,12 +17,9 @@ var schema = new Schema({
 	description: {
 		type: String,
 		required: true,
-		default: '',
 	},
 	images: {
 		type: [String],
-		required: true,
-		default: [],
 	},
 	ratings: [{
 		ownerId: {
@@ -37,7 +34,6 @@ var schema = new Schema({
 	averageRating: {
 		type: Number,
 		required: true,
-		default: 0,
 	},
 	isPublic: Boolean,
 	isDeleted: Boolean,

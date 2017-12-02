@@ -14,6 +14,8 @@ import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { AdminDashComponent } from './admin-dash/admin-dash.component';
 import { AdminLogsComponent } from './admin-logs/admin-logs.component';
 
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
+
 
 
 const routes = [
@@ -29,6 +31,8 @@ const routes = [
   { path: 'admin-login', component: AdminLoginComponent },
   { path: 'admin-dash', component: AdminDashComponent },
   { path: 'admin-logs', component: AdminLogsComponent },
+  
+  { path: 'verify/:token', component: VerifyEmailComponent },
   { path: '', redirectTo: '/startpage', pathMatch: 'full' },
 ];
 

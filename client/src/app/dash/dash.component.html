@@ -1,3 +1,56 @@
-<p>
-  dash works!
-</p>
+<h1>Welcome, {{currentUser.name}}</h1>
+<nav>
+    <ul>
+        <li>
+            <a routerLink="/public-feed">Public collection feed</a>
+        </li>
+        <li>
+            <a routerLink="/nasa-search">Nasa image search</a>
+        </li>
+        <li>
+            <a href="#create-collection">Create collection</a>
+        </li>
+        <li>
+            <a href="#my-collections">My collections</a>
+        </li>
+        <li>
+            <a routerLink="/logout">Log out</a>
+        </li>
+    </ul>
+</nav>
+
+<main>
+    <section id="create-collection">
+        <form #f="ngForm" (ngSubmit)="onCreateCollection(f.value)" accept-charset="utf-8">
+            <fieldset>
+                <legend>Create a collection</legend>
+                <label>Collection name</label>
+                <br />
+                <input type="text" name="name" ngModel />
+                <br />
+                <br />
+
+                <label>Collection description</label>
+                <br />
+                <textarea type="text" name="description" ngModel></textarea>
+                <br />
+                <br />
+
+                <label><input type="checkbox" name="isPublic" ngModel /> Make it public?</label>
+                <br />
+                <br />
+
+                <input type="submit" value="Create"/>
+            </fieldset>
+        </form>
+    </section>
+    <section id="my-collections">
+        <h2>My collections</h2>
+        <ul *ngIf="myCollections.length">
+            <li *ngFor="let collection of myCollections">
+                <a routerLink="/collection/{{collection._id}}">{{collection.name}}</a>
+            </li>
+        </ul>
+        <p *ngIf="!myCollections.length">No items.</p>
+    </section>
+</main>
