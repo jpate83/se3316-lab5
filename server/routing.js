@@ -38,13 +38,15 @@ module.exports = function(passport) {
 							error: 'Error logging you in',
 						});
 					};
-					res.json(user);
+					res.json({
+						data: user
+					});
 				});
 			};
 		})(req, res, next);
 	});
 
-	router.post('/isAuthenticated', function(req, res) {
+	router.get('/isAuthenticated', function(req, res) {
 		res.json({
 			isAuthenticated: req.isAuthenticated(),
 		});
@@ -67,7 +69,9 @@ module.exports = function(passport) {
 							error: 'Error logging you in',
 						});
 					};
-					res.json(user);
+					res.json({
+						data: user
+					});
 				});
 			};
 		})(req, res, next);
@@ -242,26 +246,30 @@ module.exports = function(passport) {
 	});
 
 	router.post('/user/rate-collection', ensureAuthenticated, function(req, res) {
-		ImageCollection.findById(req.body.forCollection).exec(function(err, collection) {
+		ImageCollection.findById(req.body.collectionId).exec(function(err, collection) {
 			if (err) {
 				res.json({error: ''});
 			} else {
+				if (collection.ownerId.toString() == req.user._id.toString()) {
+					return res.json({error: ''});
+				};
+				
 				var existing = collection.findIndex(function(el) {
 					return el.ownerId.toString() == req.user._id.toString();
 				});
 				if (existing != -1) {
-					collection[existing].rating = req.rating;
+					collection[existing].rating = req.body.rating;
 				} else {
 					collection.push({
 						ownerId: req.user._id,
-						rating: req.rating,
+						rating: req.body.rating,
 					});
 				};
 				collection.save({validateBeforeSave: true}, function(err, newCollection) {
 					if (err) {
-						res.send({error: ''});
+						res.json({error: ''});
 					} else {
-						res.send({data: newCollection});
+						res.json({data: newCollection});
 					};
 				});
 			};
