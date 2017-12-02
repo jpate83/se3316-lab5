@@ -23,7 +23,7 @@ module.exports = function(passport) {
 
 	// ---------------------------------- passport ---------------------------------- //
 
-	router.post('/login', function(req, res) {
+	router.post('/login', function(req, res, next) {
 		req.body.username = req.body["email"];
 		req.body.password = req.body["password"];
 		passport.authenticate('local-login', function(info, user) {
