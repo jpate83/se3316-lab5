@@ -46,7 +46,7 @@ module.exports = function(passport) {
 		})(req, res, next);
 	});
 
-	router.get('/isAuthenticated', function(req, res) {
+	router.get('/isAuthenticated', function(req, res) { // this is useless
 		res.json({
 			isAuthenticated: req.isAuthenticated(),
 		});
@@ -143,23 +143,28 @@ module.exports = function(passport) {
 			});
 		};
 
-		if (req.isAuthenticated()) {
+		if (req.body.user) {
 			ImageCollection.findOne({
 				$or: [{
 					isPublic: true,
 				}, {
-					ownerId: req.user._id,
+					ownerId: req.body.user._id,
 				}],
 				isDeleted: { $ne: true },
+				_id: req.params.collectionId,
 			}).exec(handleQuery);
 		} else {
-			ImageCollection.findOne({ isPublic: true }).exec(handleQuery);
+			ImageCollection.findOne({
+				isPublic: true,
+				_id: req.params.collectionId,
+				isDeleted: { $ne: true }
+			}).exec(handleQuery);
 		};
 	});
 
 	router.get('/collections/this-user', ensureAuthenticated, function(req, res) {
 		ImageCollection.find({
-			ownerId: req.user._id,
+			ownerId: req.body.user._id,
 			isDeleted: { $ne: true },
 		}).exec(function(err, results) {
 			res.json({
@@ -184,7 +189,7 @@ module.exports = function(passport) {
 		var bod = req.body;
 		var newCollection = new ImageCollection({
 			created: new Date(),
-			ownerId: req.user._id.toString(),
+			ownerId: req.body.user._id.toString(),
 			name: sanitizeString(bod.name),
 			description: sanitizeString(bod.description),
 			images: [],
@@ -209,7 +214,7 @@ module.exports = function(passport) {
 		var updatedCollection = req.body.updatedCollection;
 		ImageCollection.findOne({
 			_id: req.body.updatedCollectionId,
-			ownerId: req.user._id,
+			ownerId: req.body.user._id,
 		}).exec(function(err, collection) {
 			if (err || !collection) {
 				res.json({
@@ -250,18 +255,18 @@ module.exports = function(passport) {
 			if (err) {
 				res.json({error: ''});
 			} else {
-				if (collection.ownerId.toString() == req.user._id.toString()) {
+				if (collection.ownerId.toString() == req.body.user._id.toString()) {
 					return res.json({error: ''});
 				};
 
 				var existing = collection.ratings.findIndex(function(el) {
-					return el.ownerId.toString() == req.user._id.toString();
+					return el.ownerId.toString() == req.body.user._id.toString();
 				});
 				if (existing != -1) {
 					collection.ratings[existing].rating = req.body.rating;
 				} else {
 					collection.ratings.push({
-						ownerId: req.user._id,
+						ownerId: req.body.user._id,
 						rating: req.body.rating,
 					});
 				};
@@ -284,7 +289,7 @@ module.exports = function(passport) {
 	router.post('/user/report-collection', ensureAuthenticated, function(req, res) {
 		var newReport = new DMCAReport({
 			created: new Date(),
-			creatorId: req.user._id,
+			creatorId: req.body.user._id,
 			reportedEntityId: req.body.reportedEntityId,
 			message: sanitizeString(req.body.message),
 		});
@@ -296,7 +301,7 @@ module.exports = function(passport) {
 	});
 
 	router.get('/user/takedown-notices', ensureAuthenticated, function(req, res) {
-		DMCANotice.find({to: req.user._id}).populate('for').exec(function(err, noticies) {
+		DMCANotice.find({to: req.body.user._id}).populate('for').exec(function(err, noticies) {
 			res.json({
 				data: noticies,
 			});
