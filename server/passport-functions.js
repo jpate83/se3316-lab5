@@ -45,7 +45,10 @@ module.exports = {
 							} else {
 								var newUser = new User({
 									created: new Date(),
-									email: email,
+									email: {
+										address: email,
+										isVerified: false,
+									},
 									name: name,
 									password: hash,
 								});
