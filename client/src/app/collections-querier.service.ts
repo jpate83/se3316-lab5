@@ -18,7 +18,7 @@ export class CollectionsQuerierService {
     }
     
     getCollection(collectionId, callback) {
-        this.http.get(base + '/api/collection/' + collectionId).subscribe(data => {
+        this.http.get(base + '/collection/' + collectionId).subscribe(data => {
             callback(data["data"]);
         }, err => {
             console.log(err);
@@ -27,7 +27,7 @@ export class CollectionsQuerierService {
     }
     
     getCollectionsForUser(callback) {
-        this.http.get(base + '/api/collections/this-user').subscribe(data => {
+        this.http.get(base + '/collections/this-user').subscribe(data => {
             callback(data["data"]);
         }, err => {
             console.log(err);
@@ -36,7 +36,7 @@ export class CollectionsQuerierService {
     }
     
     getPublicCollectionsForAuthenticated(callback) {
-        this.http.get(base + '/api/collections/public').subscribe(data => {
+        this.http.get(base + '/collections/public').subscribe(data => {
             callback(data["data"]);
         }, err => {
             console.log(err);
@@ -45,7 +45,7 @@ export class CollectionsQuerierService {
     }
     
     getCollectionTakedownNotices(callback) {
-        this.http.get(base + '/api/user/takedown-notices').subscribe(data => {
+        this.http.get(base + '/user/takedown-notices').subscribe(data => {
             callback(data["data"]);
         }, err => {
             console.log(err);
