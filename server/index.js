@@ -4,6 +4,7 @@
 var PORT = 8081;
 var DB_URI = 'mongodb://user:password@ds125556.mlab.com:25556/se3316';
 var SESSION_MIDDLEWARE_SECRET = 'se3316supersecret';
+global.__environmentDomainName = 'lab5-sumkcid.c9users.io';
 
 
 // ------------------------------ requires ------------------------------ //
