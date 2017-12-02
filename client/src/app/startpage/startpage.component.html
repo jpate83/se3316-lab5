@@ -1,0 +1,12 @@
+<h1>Nasa image browser: SE3316</h1>
+<h2>About</h2>
+<p>A simple application for creating and browsing collections created from NASA's image library.</p>
+<a routerLink="/login">Log in</a>
+
+<h2>Top ten public collections</h2>
+<ul>
+    <li *ngFor="let collection of publicCollections">
+        <a routerLink="/collection/{{collection._id}}">{{collection.title}}</a>
+        <p>Rating: {{collection.averageRating}}</p>
+    </li>
+</ul>

@@ -18,7 +18,6 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
-var cors = require('kcors');
 
 
 // ------------------------------ mongoose ------------------------------ //
@@ -42,7 +41,6 @@ process.on('SIGINT', function() {
 
 // ------------------------------ [app.use] ------------------------------ //
 
-app.use(cors());
 
 app.use(express.static('public'));
 app.use(cookieParser());
@@ -137,6 +135,11 @@ passport.deserializeUser(function(userId, done) {
 });
 
 // ------------------------------ routers ------------------------------ //
+app.use(function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
+});
 
 
 app.use('/api', require('./routing.js')(passport));

@@ -19,6 +19,7 @@
     "fibers": "^2.0.0",
     "future": "^2.3.1",
     "handlebars": "^4.0.10",
+    "kcors": "^2.2.1",
     "mailgun-js": "^0.11.3",
     "moment": "^2.18.1",
     "mongodb": "^2.2.28",
