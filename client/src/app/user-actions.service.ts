@@ -24,7 +24,7 @@ export class UserActionsService {
     }
     
     updateCollection(collectionId, updatedCollection, callback) {
-        this.http.post(base + '/user/create-collection', {
+        this.http.post(base + '/user/update-collection', {
             updatedCollection,
             updatedCollectionId: collectionId,
             user: this.accounts.currentUser(),

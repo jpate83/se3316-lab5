@@ -21,6 +21,10 @@ export class NasaApiService {
                 let resp = data["collection"];
                 if (resp)
                     resp = resp["items"];
+                
+                if (!this.queryResults[q]) {
+                    this.queryResults[q] = {};
+                };
                 this.queryResults[q][page] = resp;
                 callback(resp);
             }, err => {

@@ -1,3 +1,29 @@
-<p>
-  nasa-search works!
-</p>
+<h1>Nasa image search</h1>
+<div class="modal" id="add-to-collection-modal" *ngIf="showModal">
+    <h2>Select collection to add to</h2>
+    <button type="button" (click)="closeModal()">Cancel</button>
+    <hr />
+    <button class="item" type="button" (click)="onSelectCollectionToAddTo(collection)" *ngFor="let collection of myCollections">
+        {{collection.name}}
+    </button>
+</div>
+<section>
+    <input type="text" placeholder="Enter search query..." (keyup)="onSearchInputKeyup($event)" />
+    <button type="button" (click)="executeQuery()">Search</button>
+</section>
+<section *ngIf="query.length && queryExecuted">
+    <h2>Results</h2>
+    <p>Page: {{currentPage}}</p>
+    <button type="button" *ngIf="currentPage-1" (click)="prevPage()">Prev page</button>
+    <button type="button" (click)="nextPage()">Next page</button>
+    <ul *ngIf="searchResults.length">
+        <li *ngFor="let result of searchResults">
+            <p>{{result.title}}</p>
+            <button type="button" (click)="onAddToCollection(result)">Add to collection</button>
+            <br />
+            <br />
+            <img src="{{result.image}}" height="120" />
+        </li>
+    </ul>
+    <p *ngIf="!searchResults.length">No results.</p>
+</section>

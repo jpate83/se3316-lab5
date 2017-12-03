@@ -1,0 +1,19 @@
+.modal {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100%; width: 100%;
+    background-color: white;
+    z-index: 5;
+    padding: 48px;
+}
+
+.item {
+    border: 0;
+    outline: 0;
+    background-color: transparent;
+    padding: 12px;
+    cursor: pointer;
+    display: block;
+    font-size: 15px;
+    text-decoration: underline;
+}
