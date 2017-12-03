@@ -8,10 +8,12 @@ var schema = new Schema({
 	},
 	creatorId: {
 		type: mongoose.SchemaTypes.ObjectId,
+		ref: 'users',
 		required: true,
 	},
 	reportedEntityId: {
 		type: mongoose.SchemaTypes.ObjectId,
+		ref: 'imageCollections',
 		required: true,
 	},
 	message: String,
