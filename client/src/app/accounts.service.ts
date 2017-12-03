@@ -82,4 +82,13 @@ export class AccountsService {
     currentUser() {
         return JSON.parse(localStorage.getItem('user'));
     }
+    
+    resendVerificationEmail(callback) {
+        this.http.post(base + '/resend-verification-email', this.currentUser()).subscribe(data => {
+            callback(data["success"])
+        }, err => {
+            console.log(err);
+            callback(false);
+        });
+    }
 }

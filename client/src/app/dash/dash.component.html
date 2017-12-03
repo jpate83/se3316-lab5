@@ -1,4 +1,5 @@
 <h1>Welcome, {{currentUser.name}}</h1>
+<p *ngIf="!currentUser.email.isVerified">Your email has not been verified! <button type="button" (click)="onResendVerification()">Resend verification link</button></p>
 <nav>
     <ul>
         <li>

@@ -1,3 +1,51 @@
-<p>
-  collection-view works!
-</p>
+<main *ngIf="thisCollection.name">
+    <h1>{{thisCollection.name}}</h1>
+    <section>
+        <h2>Overview</h2>
+        <p><b>Descripton:</b> {{thisCollection.description}}</p>
+        <p><b>By:</b> {{thisCollection.ownerId.name}}</p>
+        <p><b>Avg. rating:</b> {{thisCollection.averageRating}}</p>
+    </section>
+    <section *ngIf="currentUser">
+        <div *ngIf="!thisUserOwns">
+            <h2>Rate</h2>
+            <input type="number" max="5" min="1" value="{{existingRating}}" (change)="ratingKeyup($event)" />
+            <button type="button" (click)="makeRating()">Rate</button>
+        </div>
+        <div *ngIf="thisUserOwns">
+            <form #f="ngForm" (ngSubmit)="onUpdateCollection(f.value)" accept-charset="utf-8">
+                <fieldset>
+                    <legend>Update collection</legend>
+                    <label>Collection name</label>
+                    <br />
+                    <input type="text" name="name" value="{{thisCollection.name}}" ngModel />
+                    <br />
+                    <br />
+    
+                    <label>Collection description</label>
+                    <br />
+                    <textarea type="text" name="description" ngModel>{{thisCollection.description}}</textarea>
+                    <br />
+                    <br />
+    
+                    <label><input type="checkbox" name="isPublic" attr.checked="{{thisCollection.isPublic}}" ngModel /> Make it public?</label>
+                    <p *ngIf="thisCollection.isPublic"><b>*note: the collection is currently public*</b></p>
+                    <br />
+                    <input type="submit" value="Update"/>
+                </fieldset>
+            </form>
+        </div>
+    </section>
+    <section>
+        <h2>Images</h2>
+        <ul>
+            <li *ngFor="let url of thisCollection.images">
+                <button *ngIf="thisUserOwns" type="button" (click)="removeImageFromCollection(url)">Remove</button>
+                <br /><br />
+                <img src="{{url}}" height="240" />
+                <br /><br />
+                <br /><br />
+            </li>
+        </ul>
+    </section>
+</main>

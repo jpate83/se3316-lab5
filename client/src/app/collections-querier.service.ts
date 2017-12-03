@@ -17,7 +17,7 @@ export class CollectionsQuerierService {
             callback(undefined);
         });
     }
-    
+
     getCollection(collectionId, callback) {
         let params = new HttpParams();
         if (this.accounts.isLoggedIn()) {
@@ -31,7 +31,7 @@ export class CollectionsQuerierService {
             callback(undefined);
         });
     }
-    
+
     getCollectionsForUser(callback) {
         let params = new HttpParams().set('userId', this.accounts.currentUser()._id.toString());
 

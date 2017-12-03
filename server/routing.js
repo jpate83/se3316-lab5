@@ -83,6 +83,11 @@ module.exports = function(passport) {
 			success: true,
 		});
 	});
+	
+	router.post('/resend-verification-email', function(req, res) {
+		EmailVerification.verifyUser(req.body);
+		res.send({success: true});
+	});
 
 	router.post('/verify/:verificationToken', function(req, res) {
 		var tokenData = req.params.verificationToken;
@@ -143,7 +148,7 @@ module.exports = function(passport) {
 			});
 		};
 
-		if (req.body.user) {
+		if (req.query.userId) {
 			ImageCollection.findOne({
 				$or: [{
 					isPublic: true,
@@ -152,13 +157,13 @@ module.exports = function(passport) {
 				}],
 				isDeleted: { $ne: true },
 				_id: req.params.collectionId,
-			}).exec(handleQuery);
+			}).populate('ownerId').exec(handleQuery);
 		} else {
 			ImageCollection.findOne({
 				isPublic: true,
 				_id: req.params.collectionId,
 				isDeleted: { $ne: true }
-			}).exec(handleQuery);
+			}).populate('ownerId').exec(handleQuery);
 		};
 	});
 

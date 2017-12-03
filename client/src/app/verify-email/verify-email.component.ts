@@ -21,6 +21,7 @@ export class VerifyEmailComponent implements OnInit {
       let token = params['token'];
       this.accounts.verifyEmail(token, isSuccess => {
         if (isSuccess) {
+          localStorage.removeItem('user');
           this.status = 'Successfully verified!<br/><a href="/login">Log in</a>';
         } else {
           this.status = 'Error verifying. Token may have expired or your email is already verified.<br />Please <a href="/login">log in</a> and request another verification email if necessary.';

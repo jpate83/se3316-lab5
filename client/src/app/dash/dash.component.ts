@@ -32,6 +32,15 @@ export class DashComponent implements OnInit {
     });
   }
   
+  onResendVerification() {
+    this.accounts.resendVerificationEmail(success => {
+      if(!success) {
+        alert('Error resending verification email');
+      } else {
+        alert('Verification email resent!');
+      }
+    });
+  }
   
   onCreateCollection(values) {
     let name = values.name.trim();
