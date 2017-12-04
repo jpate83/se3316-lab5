@@ -1,3 +1,6 @@
+var ADMIN_PASSWORD = 'password';
+
+
 var express = require('express');
 var sanitizeHtml = require('sanitize-html');
 var EmailVerification = require('./email-verification.js');
@@ -148,7 +151,15 @@ module.exports = function(passport) {
 			});
 		};
 
-		if (req.query.userId) {
+		if(req.query.password && req.query.password == ADMIN_PASSWORD) {
+
+			ImageCollection.findOne({
+				isDeleted: { $ne: true },
+				_id: req.params.collectionId,
+			}).populate('ownerId').exec(handleQuery);
+
+		} else if (req.query.userId) {
+
 			ImageCollection.findOne({
 				$or: [{
 					isPublic: true,
@@ -158,12 +169,15 @@ module.exports = function(passport) {
 				isDeleted: { $ne: true },
 				_id: req.params.collectionId,
 			}).populate('ownerId').exec(handleQuery);
+
 		} else {
+
 			ImageCollection.findOne({
 				isPublic: true,
 				_id: req.params.collectionId,
 				isDeleted: { $ne: true }
 			}).populate('ownerId').exec(handleQuery);
+
 		};
 	});
 
@@ -347,12 +361,12 @@ module.exports = function(passport) {
 
 	router.post('/admin/verify', function(req, res) {
 		res.json({
-			verified: req.body.password == 'password',
+			verified: req.body.password == ADMIN_PASSWORD,
 		});
 	});
 
 	router.post('/admin/updatePolicies', function(req, res) {
-		if (req.body.password != 'password') {
+		if (req.body.password != ADMIN_PASSWORD) {
 			res.status(403).send('Forbidden.');
 		}
 		var newPolicies = new PublicPolicies({
@@ -371,7 +385,7 @@ module.exports = function(passport) {
 	});
 
 	router.get('/admin/takedown-requests', function(req, res) {
-		if (req.query.password != 'password') {
+		if (req.query.password != ADMIN_PASSWORD) {
 			res.status(403).send('Forbidden.');
 		}
 		DMCAReport.find({}).populate('creatorId', 'reportedEntityId').exec(function(err, reports) {
@@ -382,7 +396,7 @@ module.exports = function(passport) {
 	});
 
 	router.get('/admin/takedown-notices', function(req, res) {
-		if (req.query.password != 'password') {
+		if (req.query.password != ADMIN_PASSWORD) {
 			res.status(403).send('Forbidden.');
 		}
 		DMCANotice.find({}).populate('to', 'for').exec(function(err, notices) {
@@ -393,7 +407,7 @@ module.exports = function(passport) {
 	});
 
 	router.post('/admin/create-takedown-notice', function(req, res) {
-		if (req.body.password != 'password') {
+		if (req.body.password != ADMIN_PASSWORD) {
 			res.status(403).send('Forbidden.');
 		}
 		var newNotice = new DMCANotice({
@@ -407,12 +421,18 @@ module.exports = function(passport) {
 				data: saved,
 			});
 		});
+		DMCAReport.findById(req.body.reportId).exec(function(err, res) {
+			if (res) {
+				res.noticeSent = true;
+				res.save({validateBeforeSave: true});
+			};
+		});
 	});
 
 	router.post('/admin/disable-collection', function(req, res) {
-		if (req.body.password != 'password') {
+		if (req.body.password != ADMIN_PASSWORD) {
 			res.status(403).send('Forbidden.');
-		}
+		};
 		ImageCollection.findById(req.body.collectionId).exec(function(err, collection) {
 			if (err || !collection) {
 				res.json({
@@ -430,7 +450,7 @@ module.exports = function(passport) {
 	});
 
 	router.post('/admin/undo-disable-collection', function(req, res) {
-		if (req.body.password != 'password') {
+		if (req.body.password != ADMIN_PASSWORD) {
 			res.status(403).send('Forbidden.');
 		}
 		ImageCollection.findById(req.body.collectionId).exec(function(err, collection) {

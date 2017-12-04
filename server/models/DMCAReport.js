@@ -16,6 +16,7 @@ var schema = new Schema({
 		ref: 'imageCollections',
 		required: true,
 	},
+	noticeSent: Boolean,
 	message: String,
 });
 
