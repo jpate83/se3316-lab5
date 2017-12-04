@@ -8,7 +8,6 @@ import { AdminService } from '../admin.service';
   styleUrls: ['./admin-login.component.css']
 })
 export class AdminLoginComponent implements OnInit {
-  verifyPassword = '';
 
   constructor(
     private adminService: AdminService, 
@@ -16,7 +15,7 @@ export class AdminLoginComponent implements OnInit {
     private route: ActivatedRoute,
   ) { }
 
-  ngOnInit() {
+  ngOnInit() { // take to dashboard if already verified
     let self = this;
     this.adminService.isAdmin(isAdmin => {
       if (isAdmin) {
@@ -25,6 +24,7 @@ export class AdminLoginComponent implements OnInit {
     });
   }
 
+  verifyPassword = ''; // used on submit event
   onVerifyPasswordChange(e) {
     this.verifyPassword = e.target.value;
     if (e.keyCode == 13) {

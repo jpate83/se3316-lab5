@@ -20,7 +20,7 @@ export class AdminLogsComponent implements OnInit {
 
   ngOnInit() {
     let self = this;
-    this.adminService.isAdmin(isAdmin => {
+    this.adminService.isAdmin(isAdmin => { // leave page if not verified
       if (!isAdmin) {
         self.router.navigate(['/admin-login']);
       } else {
@@ -35,20 +35,21 @@ export class AdminLogsComponent implements OnInit {
     });
   }
 
-  reportIdNoticeMessageMap = {};
+  
+  reportIdNoticeMessageMap = {}; // acts as a hashmap: reportId -> infringement notice message
   onSendTakeDownNoticeMessageChange(e, reportId) {
     if (!this.isAdmin)
       return;
     this.reportIdNoticeMessageMap[reportId] = e.target.value.trim();
   }
-  onSendTakeDownNoticeSubmit(report) {
+  
+  onSendTakeDownNoticeSubmit(report) { // reads message from reportIdNoticeMessageMap associated to {@param: report}
     if (!this.isAdmin)
       return;
     let message = this.reportIdNoticeMessageMap[report._id.toString()];
     if (!message.length) {
       return alert('Please enter a message');
     };
-    console.log(report)
     this.adminService.createTakedownNotice(
       report.reportedEntityId.ownerId,
       report.reportedEntityId._id,
@@ -63,7 +64,7 @@ export class AdminLogsComponent implements OnInit {
     });
   }
   
-  onTakeDownContent(collection) {
+  onTakeDownContent(collection) { // delete content
     if (!this.isAdmin)
       return;
     this.adminService.disableCollection(collection._id, isSuccess => {
@@ -75,7 +76,7 @@ export class AdminLogsComponent implements OnInit {
     })
   }
   
-  onRestoreContent(collection) {
+  onRestoreContent(collection) { // restore content
     if (!this.isAdmin)
       return;
     this.adminService.undoDisableCollection(collection._id, isSuccess => {

@@ -8,6 +8,8 @@ export class AdminService {
 
     constructor(private http: HttpClient) { }
     
+    //* NOTE: The below method signatures and parameter names are quite self explanatory of the services *//
+    
     verifyAdmin(password, callback) {
         this.http.post(base + '/admin/verify', {
             password,

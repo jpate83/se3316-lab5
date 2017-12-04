@@ -16,7 +16,7 @@ export class AdminDashComponent implements OnInit {
     private route: ActivatedRoute,
   ) { }
 
-  ngOnInit() {
+  ngOnInit() { // leave page if not verified
     let self = this;
     this.adminService.isAdmin(isAdmin => {
       if (!isAdmin) {

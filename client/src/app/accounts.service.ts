@@ -9,6 +9,8 @@ export class AccountsService {
 
     constructor(private http: HttpClient) { }
 
+    //* NOTE: The below method signatures and parameter names are quite self explanatory of the services *//
+    
     login(email, password, callback) {
         this.http.post(base + '/login', {
             email,
@@ -25,15 +27,8 @@ export class AccountsService {
         });
     }
     
-    isLoggedIn(/*callback*/) {
+    isLoggedIn() {
         return !!localStorage.getItem('user');
-        /*this.http.get(base + '/isAuthenticated', {}).subscribe(data => {
-            var isAuthenticated = data['isAuthenticated'];
-            callback(isAuthenticated);
-        }, err => {
-            console.log(err);
-            callback(false);
-        });*/
     }
     
     logout(callback) {

@@ -1,0 +1,11 @@
+Click the 'DMCA tools' link on your admin dashboard to get started.
+
+-> There will be a list of take down requests
+    -> Fill in the message box and hit 'send' to send
+       an infrignment notice to the owner of the
+       collection that has been requested to be taken
+       down.
+-> Below this list, there will be a list of takedown notices
+    -> A dispute message will appear if the user has disputed the notice.
+    -> Click the 'take content down' button to remove the content from the site.
+    -> To restore content that has a disputed infringment notice, click the 'restore content button'

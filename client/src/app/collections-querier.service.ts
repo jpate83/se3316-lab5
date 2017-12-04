@@ -10,6 +10,8 @@ export class CollectionsQuerierService {
 
     constructor(private http: HttpClient, private accounts: AccountsService, private adminService: AdminService) { }
     
+    //* NOTE: The below method signatures and parameter names are quite self explanatory of the services *//
+    
     getTopTenPublic(callback) {
         this.http.get(base + '/collections/top-ten-public').subscribe(data => {
             callback(data["data"]);

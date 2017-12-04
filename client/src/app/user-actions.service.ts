@@ -9,6 +9,7 @@ export class UserActionsService {
 
     constructor(private http: HttpClient, private accounts: AccountsService) { }
     
+    // create a collection
     createCollection(name, description, isPublic, callback) {
         this.http.post(base + '/user/create-collection', {
             name,
@@ -23,6 +24,7 @@ export class UserActionsService {
         });
     }
     
+    // update a collection's fields
     updateCollection(collectionId, updatedCollection, callback) {
         this.http.post(base + '/user/update-collection', {
             updatedCollection,
@@ -36,6 +38,7 @@ export class UserActionsService {
         });
     }
     
+    // delete a collection
     deleteCollection(collectionId, callback) {
         this.http.post(base + '/user/delete-collection', {
             collectionId,
@@ -48,6 +51,7 @@ export class UserActionsService {
         });
     }
     
+    // rate a collection. update rating if there's already one. disabled if current user is the owner of the collection
     rateCollection(collectionId, rating, callback) {
         this.http.post(base + '/user/rate-collection', {
             rating,
@@ -61,6 +65,7 @@ export class UserActionsService {
         });
     }
 
+    // request a takedown of a collection for infringing on copyright
     reportCollection(collectionId, message, callback) {
         this.http.post(base + '/user/report-collection', {
             reportedEntityId: collectionId,
@@ -74,6 +79,7 @@ export class UserActionsService {
         });
     }
 
+    // not used in this app
     readTakedownNotice(noticeId, callback) {
         this.http.post(base + '/user/read-takedown-notice', {
             noticeId,
@@ -86,6 +92,7 @@ export class UserActionsService {
         });
     }
 
+    // dispute an infringement notice
     disputeTakedownNotice(noticeId, message, callback) {
         this.http.post(base + '/user/dispute-takedown-notice', {
             noticeId,

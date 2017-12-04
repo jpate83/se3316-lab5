@@ -9,6 +9,11 @@ export class NasaApiService {
     
     constructor(private http: HttpClient) {}
     
+    /**
+     * @param: q - the query
+     * @param: page - pagination of results
+     * @param: callback - results from api in array format
+     */
     query(q, page, callback) {
         if (this.queryResults[q] && this.queryResults[q][page]) {
             callback(this.queryResults[q][page]);
