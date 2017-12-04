@@ -374,7 +374,7 @@ module.exports = function(passport) {
 		if (req.query.password != 'password') {
 			res.status(403).send('Forbidden.');
 		}
-		DMCAReport.find({}).populate('for').populate('to').exec(function(err, reports) {
+		DMCAReport.find({}).populate('creatorId', 'reportedEntityId').exec(function(err, reports) {
 			res.json({
 				data: reports,
 			});
@@ -385,7 +385,7 @@ module.exports = function(passport) {
 		if (req.query.password != 'password') {
 			res.status(403).send('Forbidden.');
 		}
-		DMCANotice.find({}).exec(function(err, notices) {
+		DMCANotice.find({}).populate('to', 'for').exec(function(err, notices) {
 			res.json({
 				data: notices,
 			});
