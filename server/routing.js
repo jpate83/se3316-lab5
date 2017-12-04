@@ -260,7 +260,7 @@ module.exports = function(passport) {
 	});
 
 	router.post('/user/delete-collection', ensureAuthenticated, function(req, res) {
-		ImageCollection.findOneAndDelete({
+		ImageCollection.findOneAndRemove({
 			_id: req.body.collectionId,
 			ownerId: req.body.user._id,
 		}, function(err) {
