@@ -24,7 +24,7 @@ var router = express.Router();
 
 module.exports = function(passport) {
 
-	// ---------------------------------- passport ---------------------------------- //
+	// ---------------------------------- authentication ---------------------------------- //
 
 	router.post('/login', function(req, res, next) {
 		req.body.username = req.body["email"];
@@ -49,7 +49,7 @@ module.exports = function(passport) {
 		})(req, res, next);
 	});
 
-	router.get('/isAuthenticated', function(req, res) { // this is useless
+	router.get('/isAuthenticated', function(req, res) { // this is useless in current proxy usage
 		res.json({
 			isAuthenticated: req.isAuthenticated(),
 		});
@@ -92,6 +92,7 @@ module.exports = function(passport) {
 		res.send({success: true});
 	});
 
+	// confirma user's email address when they follow this link sent in their inbox
 	router.post('/verify/:verificationToken', function(req, res) {
 		var tokenData = req.params.verificationToken;
 		EmailVerification.confirmToken(tokenData, function(err) {
@@ -110,6 +111,7 @@ module.exports = function(passport) {
 
 	// ---------------------------------- public info ---------------------------------- //
 
+	// get top ten public collections
 	router.get('/collections/top-ten-public', function(req, res) {
 		ImageCollection.find({
 			isPublic: true,
@@ -127,6 +129,7 @@ module.exports = function(passport) {
 		});
 	});
 
+	// get public policy info
 	router.get('/policy-info', function(req, res) {
 		PublicPolicies.findOne({}).sort({ created: -1 }).exec(function(err, policyData) {
 			if (err) {
@@ -144,6 +147,7 @@ module.exports = function(passport) {
 
 	// ---------------------------------- authenticated only ---------------------------------- //
 
+	// get a collection if accessor has sufficient privileges
 	router.get('/collection/:collectionId', function(req, res) {
 		var handleQuery = function(err, result) {
 			res.json({
@@ -151,14 +155,14 @@ module.exports = function(passport) {
 			});
 		};
 
-		if(req.query.password && req.query.password == ADMIN_PASSWORD) {
+		if(req.query.password && req.query.password == ADMIN_PASSWORD) { // if is admin
 
 			ImageCollection.findOne({
 				isDeleted: { $ne: true },
 				_id: req.params.collectionId,
 			}).populate('ownerId').exec(handleQuery);
 
-		} else if (req.query.userId) {
+		} else if (req.query.userId) { // if user logged in
 
 			ImageCollection.findOne({
 				$or: [{
@@ -170,7 +174,7 @@ module.exports = function(passport) {
 				_id: req.params.collectionId,
 			}).populate('ownerId').exec(handleQuery);
 
-		} else {
+		} else { // if publicly accessed
 
 			ImageCollection.findOne({
 				isPublic: true,
@@ -181,6 +185,7 @@ module.exports = function(passport) {
 		};
 	});
 
+	// get logged in users collections (i know this is not very secure, but this is not going to run in a real prod env + angular is a bad framework so it's not worth the effort to have more secure communications)
 	router.get('/collections/this-user', ensureAuthenticated, function(req, res) {
 		ImageCollection.find({
 			ownerId: req.query.userId,
@@ -192,6 +197,7 @@ module.exports = function(passport) {
 		});
 	});
 
+	// get all public collections for an authenticated user
 	router.get('/collections/public', ensureAuthenticated, function(req, res) {
 		ImageCollection.find({
 			isPublic: true,
@@ -204,6 +210,7 @@ module.exports = function(passport) {
 	});
 
 
+	// create a collection
 	router.post('/user/create-collection', ensureAuthenticated, function(req, res) {
 		var bod = req.body;
 		var newCollection = new ImageCollection({
@@ -229,6 +236,7 @@ module.exports = function(passport) {
 		});
 	});
 
+	// update a collection's fields
 	router.post('/user/update-collection', ensureAuthenticated, function(req, res) {
 		var updatedCollection = req.body.updatedCollection;
 		ImageCollection.findOne({
@@ -259,6 +267,7 @@ module.exports = function(passport) {
 		});
 	});
 
+	// delete a collection
 	router.post('/user/delete-collection', ensureAuthenticated, function(req, res) {
 		ImageCollection.find({
 			_id: req.body.collectionId,
@@ -272,15 +281,17 @@ module.exports = function(passport) {
 		});
 	});
 
+	// Rate a collection
 	router.post('/user/rate-collection', ensureAuthenticated, function(req, res) {
 		ImageCollection.findById(req.body.collectionId).exec(function(err, collection) {
 			if (err) {
 				res.json({error: ''});
 			} else {
-				if (collection.ownerId.toString() == req.body.user._id.toString()) {
+				if (collection.ownerId.toString() == req.body.user._id.toString()) { // ensure this collection does not belong to the rater
 					return res.json({error: ''});
 				};
 
+				// if there's no rating, add a new one. If rating exists, update it.
 				var existing = collection.ratings.findIndex(function(el) {
 					return el.ownerId.toString() == req.body.user._id.toString();
 				});
@@ -292,6 +303,7 @@ module.exports = function(passport) {
 						rating: req.body.rating,
 					});
 				};
+				// update average rating calculation
 				collection.averageRating = collection.ratings.reduce(function(accum, curr) {
 					return accum + curr.rating;
 				}, 0);
@@ -307,7 +319,7 @@ module.exports = function(passport) {
 		});
 	});
 
-
+	// request a collection for takedown
 	router.post('/user/report-collection', ensureAuthenticated, function(req, res) {
 		var newReport = new DMCAReport({
 			created: new Date(),
@@ -322,6 +334,7 @@ module.exports = function(passport) {
 		});
 	});
 
+	// get a user's DMCA takedown notices sent from the admin
 	router.get('/user/takedown-notices', ensureAuthenticated, function(req, res) {
 		DMCANotice.find({to: req.query.userId}).populate('for').exec(function(err, noticies) {
 			res.json({
@@ -330,6 +343,7 @@ module.exports = function(passport) {
 		});
 	});
 
+	// dispute a takedown notice
 	router.post('/user/dispute-takedown-notice', ensureAuthenticated, function(req, res) {
 		DMCANotice.findById(req.body.noticeId).exec(function(err, notice) {
 			notice.disputeDate = new Date();
@@ -342,6 +356,7 @@ module.exports = function(passport) {
 		});
 	});
 
+	// not used in the app atm
 	router.post('/user/read-takedown-notice', ensureAuthenticated, function(req, res) {
 		DMCANotice.findById(req.body.noticeId).exec(function(err, notice) {
 			notice.read = true;
@@ -359,12 +374,14 @@ module.exports = function(passport) {
 
 	// ---------------------------------- site admin ---------------------------------- //
 
+	// ensure user's an admin
 	router.post('/admin/verify', function(req, res) {
 		res.json({
 			verified: req.body.password == ADMIN_PASSWORD,
 		});
 	});
 
+	// update policies
 	router.post('/admin/updatePolicies', function(req, res) {
 		if (req.body.password != ADMIN_PASSWORD) {
 			res.status(403).send('Forbidden.');
@@ -384,6 +401,7 @@ module.exports = function(passport) {
 		});
 	});
 
+	// get all takedown requests/collection reports
 	router.get('/admin/takedown-requests', function(req, res) {
 		if (req.query.password != ADMIN_PASSWORD) {
 			res.status(403).send('Forbidden.');
@@ -395,6 +413,7 @@ module.exports = function(passport) {
 		});
 	});
 
+	// get all previously sent takedown notices, including ones that have been disputed
 	router.get('/admin/takedown-notices', function(req, res) {
 		if (req.query.password != ADMIN_PASSWORD) {
 			res.status(403).send('Forbidden.');
@@ -406,6 +425,7 @@ module.exports = function(passport) {
 		});
 	});
 
+	// create a takedown notice
 	router.post('/admin/create-takedown-notice', function(req, res) {
 		if (req.body.password != ADMIN_PASSWORD) {
 			res.status(403).send('Forbidden.');
@@ -431,6 +451,8 @@ module.exports = function(passport) {
 		});
 	});
 
+
+	// take down a collection
 	router.post('/admin/disable-collection', function(req, res) {
 		if (req.body.password != ADMIN_PASSWORD) {
 			res.status(403).send('Forbidden.');
@@ -451,6 +473,7 @@ module.exports = function(passport) {
 		});
 	});
 
+	// restore a collection
 	router.post('/admin/undo-disable-collection', function(req, res) {
 		if (req.body.password != ADMIN_PASSWORD) {
 			res.status(403).send('Forbidden.');
@@ -475,6 +498,8 @@ module.exports = function(passport) {
 	return router;
 };
 
+
+// this is no longer used as angular is proxied.
 function ensureAuthenticated(req, res, next) {
 	next();
 	// if (req.isAuthenticated()) {

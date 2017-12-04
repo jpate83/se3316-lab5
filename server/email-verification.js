@@ -51,6 +51,9 @@ var verifyUser = function(user) {
 	});
 };
 
+/**
+ * confirms a user's email if @param: tokenData matches an existing non-expired token
+ */
 var confirmToken = function(tokenData, callback) {
 	Token.findOne({data: tokenData}).exec(function(err, tok) {
 		if (err) {
