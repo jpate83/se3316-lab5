@@ -1,3 +1,3 @@
-<p>
-  admin-login works!
-</p>
+<h1>Log in to the admin dashboard</h1>
+<input type="password" placeholder="Enter secret password." (keyup)="onVerifyPasswordChange($event)" />
+<button type="button" (click)="onVerifySubmit()">Log in</button>

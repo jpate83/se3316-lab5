@@ -27,7 +27,7 @@
 
                 <label>Collection description</label>
                 <br />
-                <textarea type="text" name="description" ngModel></textarea>
+                <textarea name="description" ngModel></textarea>
                 <br />
                 <br />
 
@@ -47,5 +47,20 @@
             </li>
         </ul>
         <p *ngIf="!myCollections.length">No items.</p>
+    </section>
+    <section id="takedownNotices">
+        <h2>Takedown/infringement notices</h2>
+        <ul *ngIf="takedownNotices.length">
+            <li *ngFor="let notice of takedownNotices">
+                <p>Notice for: <a routerLink="/collection/{{notice.for._id}}">{{notice.for.name}}</a></p>
+                <div *ngIf="!notice.disputeMessage">
+                    <textarea placeholder="Enter dispute message" (change)="onDisputeMessageChange($event)"></textarea>
+                    <button type="button" (click)="sendDisputeMessage(notice)">Send to admin</button>
+                </div>
+                <p *ngIf="notice.disputeMessage"><b>You have sent the following dispute message:</b> {{notice.disputeMessage}}</p>
+                <p>This content has <span *ngIf="!notice.for.isDeleted">not</span> been taken down by the admin.</p>
+            </li>
+        </ul>
+        <p *ngIf="!takedownNotices.length">There are no takedown notices</p>
     </section>
 </main>

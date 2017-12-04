@@ -263,8 +263,8 @@ module.exports = function(passport) {
 		ImageCollection.find({
 			_id: req.body.collectionId,
 			ownerId: req.body.user._id,
-		}).remove().exec(function(err) {
-			if (err) {
+		}).remove().exec(function(err, success) {
+			if (err || !success.result.n) {
 				res.json({error: 'Error removing collection.'});
 			} else {
 				res.json({success: true});
@@ -388,7 +388,7 @@ module.exports = function(passport) {
 		if (req.query.password != ADMIN_PASSWORD) {
 			res.status(403).send('Forbidden.');
 		}
-		DMCAReport.find({}).populate('creatorId', 'reportedEntityId').exec(function(err, reports) {
+		DMCAReport.find({}).populate('creatorId').populate('reportedEntityId').exec(function(err, reports) {
 			res.json({
 				data: reports,
 			});
@@ -399,7 +399,7 @@ module.exports = function(passport) {
 		if (req.query.password != ADMIN_PASSWORD) {
 			res.status(403).send('Forbidden.');
 		}
-		DMCANotice.find({}).populate('to', 'for').exec(function(err, notices) {
+		DMCANotice.find({}).populate('to').populate('for').exec(function(err, notices) {
 			res.json({
 				data: notices,
 			});
@@ -420,12 +420,14 @@ module.exports = function(passport) {
 			res.json({
 				data: saved,
 			});
-		});
-		DMCAReport.findById(req.body.reportId).exec(function(err, res) {
-			if (res) {
-				res.noticeSent = true;
-				res.save({validateBeforeSave: true});
-			};
+			if (saved) {
+				DMCAReport.findById(req.body.reportId).exec(function(err, res) {
+					if (res) {
+						res.noticeSent = true;
+						res.save({validateBeforeSave: true});
+					};
+				});
+			}
 		});
 	});
 

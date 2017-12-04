@@ -11,6 +11,7 @@ import { UserActionsService } from '../user-actions.service';
 })
 export class DashComponent implements OnInit {
   myCollections = [];
+  takedownNotices = [];
   currentUser = {};
 
   constructor(
@@ -29,6 +30,9 @@ export class DashComponent implements OnInit {
     let self = this;
     this.collectionsQuerier.getCollectionsForUser(resp => {
       self.myCollections = resp || [];
+    });
+    this.collectionsQuerier.getCollectionTakedownNotices(resp => {
+      self.takedownNotices = resp || [];
     });
   }
   
@@ -54,6 +58,26 @@ export class DashComponent implements OnInit {
         window.location.reload();
       } else {
         alert('Error creating collection.');
+      }
+    });
+  }
+  
+  
+  disputeMessage = '';
+  onDisputeMessageChange(e) {
+    this.disputeMessage = e.target.value.trim();
+  }
+  sendDisputeMessage(notice) {
+    let disputeMessage = this.disputeMessage;
+    if (!disputeMessage.length) {
+      return alert('Please enter a message');
+    }
+    this.userActions.disputeTakedownNotice(notice._id.toString(), disputeMessage, isSuccess => {
+      if (!isSuccess) {
+        alert('Error sending dispute message.');
+      } else {
+        alert('Dispute message sent!');
+        window.location.reload();
       }
     });
   }

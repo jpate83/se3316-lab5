@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationExtras } from '@angular/router';
+import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
+import { AdminService } from '../admin.service';
 
 @Component({
   selector: 'app-admin-login',
@@ -7,10 +8,39 @@ import { NavigationExtras } from '@angular/router';
   styleUrls: ['./admin-login.component.css']
 })
 export class AdminLoginComponent implements OnInit {
+  verifyPassword = '';
 
-  constructor() { }
+  constructor(
+    private adminService: AdminService, 
+    private router: Router,
+    private route: ActivatedRoute,
+  ) { }
 
   ngOnInit() {
+    let self = this;
+    this.adminService.isAdmin(isAdmin => {
+      if (isAdmin) {
+        self.router.navigate(['/admin-dash']);
+      }
+    });
+  }
+
+  onVerifyPasswordChange(e) {
+    this.verifyPassword = e.target.value;
+    if (e.keyCode == 13) {
+      this.onVerifySubmit();
+    }
+  }
+
+  onVerifySubmit() {
+    let verifyPassword = this.verifyPassword;
+    if (!verifyPassword.length)
+      return alert('Please enter a valid password.');
+    this.adminService.verifyAdmin(verifyPassword, isVerified => {
+      if (!isVerified)
+        return alert('Incorrect password.');
+      this.router.navigate(['/admin-dash']);
+    });
   }
 
 }

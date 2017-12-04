@@ -2,9 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { AccountsService } from '../accounts.service';
 
-import { NgForm } from '@angular/forms';
-
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',

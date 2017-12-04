@@ -1,3 +1,36 @@
-<p>
-  admin-dash works!
-</p>
+<h1>Admin dashboard</h1>
+<button type="button" (click)="onLogout()">Log out</button>
+<p>DMCA tools: <a routerLink="/admin-logs">link</a></p>
+<p>DMCA tools documentation: <a href="/assets/dmca-tools.rtf" target="_blank">link</a></p>
+<p>Public policies: <a routerLink="/policies">link</a></p>
+<form #f="ngForm" (ngSubmit)="onUpdatePolicies(f.value)" accept-charset="utf-8">
+    <fieldset>
+        <legend>Update policies</legend>
+        
+        <label>Security Policy</label>
+        <br />
+        <textarea name="securityPolicy" ngModel></textarea>
+        <br />
+        <br />
+        
+        <label>Privacy Policy</label>
+        <br />
+        <textarea name="privacyPolicy" ngModel></textarea>
+        <br />
+        <br />
+        
+        <label>DMCA notice & takedown policy</label>
+        <br />
+        <textarea name="DMCAPolicy" ngModel></textarea>
+        <br />
+        <br />
+        
+        <label>Infringement contact info</label>
+        <br />
+        <textarea name="infringementContactInfo" ngModel></textarea>
+        <br />
+        <br />
+
+        <input type="submit" value="Update"/>
+    </fieldset>
+</form>

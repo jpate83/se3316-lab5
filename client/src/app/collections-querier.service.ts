@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { AccountsService } from './accounts.service';
+import { AdminService } from './admin.service';
 
 const base = 'https://lab5-sumkcid.c9users.io:8081/api';
 
 @Injectable()
 export class CollectionsQuerierService {
 
-    constructor(private http: HttpClient, private accounts: AccountsService) { }
+    constructor(private http: HttpClient, private accounts: AccountsService, private adminService: AdminService) { }
     
     getTopTenPublic(callback) {
         this.http.get(base + '/collections/top-ten-public').subscribe(data => {
@@ -20,6 +21,9 @@ export class CollectionsQuerierService {
 
     getCollection(collectionId, callback) {
         let params = new HttpParams();
+        if(this.adminService.getAdminVerificationCode()) {
+            params.set('password', this.adminService.getAdminVerificationCode());
+        };
         if (this.accounts.isLoggedIn()) {
             params = params.set('userId', this.accounts.currentUser()._id.toString());
         };

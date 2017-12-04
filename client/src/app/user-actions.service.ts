@@ -38,7 +38,7 @@ export class UserActionsService {
     
     deleteCollection(collectionId, callback) {
         this.http.post(base + '/user/delete-collection', {
-            updatedCollectionId: collectionId,
+            collectionId,
             user: this.accounts.currentUser(),
         }).subscribe(data => {
             callback(data['success']);

@@ -94,4 +94,34 @@ export class CollectionViewComponent implements OnInit {
     });
   }
 
+  
+  reportMessage = '';
+  reportMessageChange(e) {
+    this.reportMessage = e.target.value;
+  }
+  
+  reportCollection() {
+    let reportMessage = this.reportMessage.trim();
+    if (!reportMessage.length) {
+      return alert('Please enter a message.');
+    }
+    this.userActions.reportCollection(this.thisCollection["_id"].toString(), reportMessage, isSuccess=> {
+      if (!isSuccess) {
+        return alert('Error reporting collection.');
+      } else {
+        window.location.reload();
+      }
+    });
+  }
+  
+  deleteCollection() {
+    this.userActions.deleteCollection(this.thisCollection["_id"].toString(), isSuccess=> {
+      if (!isSuccess) {
+        return alert('Error deleting collection.');
+      } else {
+        alert('Deleted collection.');
+        window.location.reload();
+      }
+    });
+  }
 }

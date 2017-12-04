@@ -11,8 +11,12 @@
             <h2>Rate</h2>
             <input type="number" max="5" min="1" value="{{existingRating}}" (change)="ratingKeyup($event)" />
             <button type="button" (click)="makeRating()">Rate</button>
+            <h2>Report/Request takedown</h2>
+            <textarea placeholder="Your message to the admin..." (change)="reportMessageChange($event)"></textarea>
+            <button type="button" (click)="reportCollection()">Report</button>
         </div>
         <div *ngIf="thisUserOwns">
+            <button type="button" (click)="deleteCollection()">Delete collection</button>
             <form #f="ngForm" (ngSubmit)="onUpdateCollection(f.value)" accept-charset="utf-8">
                 <fieldset>
                     <legend>Update collection</legend>

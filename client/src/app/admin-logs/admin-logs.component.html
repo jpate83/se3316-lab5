@@ -1,3 +1,39 @@
-<p>
-  admin-logs works!
-</p>
+<h1>Logs & DMCA tools</h1>
+
+<h2>Take down requests</h2>
+<ul *ngIf="dmcaReports.length">
+    <li *ngFor="let request of dmcaReports">
+        <p><b>Reported by:</b> {{request.creatorId.name}}</p>
+        <p><b>Reported collection:</b> <a routerLink="/collection/{{request.reportedEntityId._id}}">{{request.reportedEntityId.name}}</a></p>
+        <p><b>Report message:</b> {{request.message}}</p>
+        <div *ngIf="!request.noticeSent">
+            <textarea (change)="onSendTakeDownNoticeMessageChange($event, request._id)" placeholder="Take down notice message."></textarea>
+            <button type="button" (click)="onSendTakeDownNoticeSubmit(request)">Send takedown notice</button>
+        </div>
+        <p *ngIf="request.noticeSent">A takedown notice has been sent for this report.</p>
+    </li>
+</ul>
+<p *ngIf="!dmcaReports.length">No reports</p>
+
+<h2>Takedown notices</h2>
+<ul *ngIf="dmcaNotices.length">
+    <li *ngFor="let notice of dmcaNotices">
+        <p><b>Notice sent to:</b> {{notice.to.name}}</p>
+        <p><b>Notice for collection:</b> <a routerLink="/collection/{{notice.for._id}}">{{notice.for.name}}</a></p>
+        <p><b>Notice message:</b> {{notice.message}}</p>
+        <div *ngIf="notice.disputeMessage">
+            <p>Notice has been disputed on {{notice.disputeDate}}</p>
+            <p><b>Dispute message:</b> {{notice.disputeMessage}}</p>
+        </div>
+        <div *ngIf="!notice.for.isDeleted">
+            <button type="button" (click)="onTakeDownContent(notice.for)">Take content down</button>
+        </div>
+        <div *ngIf="notice.for.isDeleted && notice.disputeMessage">
+            <button type="button" (click)="onRestoreContent(notice.for)">Restore content</button>
+        </div>
+        <p *ngIf="notice.for.isDeleted && !notice.disputeMessage">
+            Content has been disabled.
+        </p>
+    </li>
+</ul>
+<p *ngIf="!dmcaNotices.length">No notices</p>

@@ -23,6 +23,26 @@ export class AdminService {
         });
     }
     
+    isAdmin(callback) {
+        this.http.post(base + '/admin/verify', {
+            password: localStorage.getItem('adminVerified'),
+        }).subscribe(data => {
+            callback(data['verified']);
+        }, err => {
+            console.log(err);
+            callback(false);
+        });
+    }
+    
+    getAdminVerificationCode() {
+        return localStorage.getItem('adminVerified');
+    }
+    
+    logout(callback) {
+        localStorage.removeItem('adminVerified');
+        callback();
+    }
+    
     updatePolicies(newPolicies, callback) {
         let body = { ...newPolicies };
         body.password = localStorage.getItem('adminVerified');
@@ -35,13 +55,15 @@ export class AdminService {
         });
     }
     
-    createTakedownNotice(toUserId, forCollectionId, message, callback) {
+    createTakedownNotice(toUserId, forCollectionId, reportId, message, callback) {
         this.http.post(base + '/admin/create-takedown-notice', {
             to: toUserId,
             for: forCollectionId,
             message,
+            reportId,
             password: localStorage.getItem('adminVerified'),
         }).subscribe(data => {
+            console.log(data)
             callback(data['data']);
         }, err => {
             console.log(err);
@@ -49,7 +71,7 @@ export class AdminService {
         });
     }
     
-    disableCollection(collectionId, message, callback) {
+    disableCollection(collectionId, callback) {
         this.http.post(base + '/admin/disable-collection', {
             collectionId,
             password: localStorage.getItem('adminVerified'),
@@ -61,7 +83,7 @@ export class AdminService {
         });
     }
     
-    undoDisableCollection(collectionId, message, callback) {
+    undoDisableCollection(collectionId, callback) {
         this.http.post(base + '/admin/undo-disable-collection', {
             collectionId,
             password: localStorage.getItem('adminVerified'),
